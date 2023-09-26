@@ -3,25 +3,29 @@
 // Başlangıç Challenge'ı
 
 /**Örnek Görev: İlkini Dön
- * 
+ *
  * Bu örnek sonradan gelecek olan görevleri nasıl çözeceğinizi size gösterecek.
- * 
+ *
  * Aşağdıaki Yüksek dereceden fonskiyonu(higher-order function) kullanarak aşağıdakileri yapınız
  *  1. Stringlerden oluşan bir array'i parametre olarak alın
- *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın 
+ *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın
  *  3. Array'in İLK elemanını değişken olarak alarak çalışacak olan callback fonksiyonunun sonucunu dönün
- * 
+ *
  * Aşağıdaki kodlar bu görevin nasıl yapılacağına örnek olacaktır
  * Bu fonskiyon 'asas' dönmeli(return)
-*/
+ */
 
 function ilkiniDon(stringArray, callback) {
-  return callback(stringArray[0])
+  return callback(stringArray[0]);
 }
-console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin+metin}));
+console.log(
+  "örnek görev:",
+  ilkiniDon(["as", "sa"], function (metin) {
+    return metin + metin;
+  })
+);
 
 // Başlangıç Challenge'ı Sonu
-
 
 ///// M V P ///////
 
@@ -40,8 +44,8 @@ console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin
 function skorArtirici() {
   let skor = 0;
   return function skorGuncelle() {
-   return skor++;
-  }
+    return skor++;
+  };
 }
 
 const skor1 = skorArtirici();
@@ -53,7 +57,6 @@ function skor2() {
   return skor++;
 }
 
-
 /* Görev 2: takimSkoru() 
 Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
   1. Bir çeyrekte bir takımın ürettiği skoru rastgele(random) elde eden bir sonuc dönünüz(return)
@@ -64,12 +67,22 @@ Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
 Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyonu olarak da kullanılacak
 */
 
-function takimSkoru(/*Kodunuzu buraya yazınız*/){
-    /*Kodunuzu buraya yazınız*/
+// fonksiyon tanımlarken varsayılan değerini parametre yanına eşittir koyarak verebiliriz.
+function takimSkoru(baslangic = 10, bitis = 25) {
+  /*Kodunuzu buraya yazınız*/
+  const randomExtender = bitis - baslangic + 1;
+  // +1 eklememizin sebebi, random değeri aşağı yuvarladığımızdan,
+  // max değere ulaşamıyoruz. Bu yüzden +1 ekleyerek max değere ulaşmamızı sağlıyoruz.
+  const skor = baslangic + Math.floor(Math.random() * randomExtender);
+  return skor;
 }
 
+function takimSkoruMini() {
+  const skor = 1 + Math.floor(Math.random() * 2 + 1);
+  return skor;
+}
 
-
+console.log("Görev 1, takimSkoru", takimSkoru());
 
 /* Görev 3: macSonucu() 
 Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
@@ -84,16 +97,29 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
   "EvSahibi": 92,
   "KonukTakim": 80
 }
-*/ 
+*/
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
+function macSonucu(callbackFn, quarterCount) {
+  let bizimTakim = 0;
+  let rakipTakim = 0;
+
+  for (let i = 0; i < quarterCount; i++) {
+    // bizimTakim = bizimTakim + callbackFn();
+    bizimTakim += callbackFn();
+    rakipTakim += callbackFn();
+    console.log("çeyrek skoru:", bizimTakim, rakipTakim);
+  }
+
+  const sonuc = {
+    EvSahibi: bizimTakim,
+    KonukTakim: rakipTakim,
+  };
+
+  return sonuc;
 }
 
-
-
-
-
+console.log("Görev 2, macSonucu", macSonucu(takimSkoru, 4));
+console.log("Görev 2b, sultanlar", macSonucu(takimSkoru, 3));
 
 /* Zorlayıcı Görev 4: periyotSkoru()
 Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
@@ -108,12 +134,20 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
 }
   */
 
+function periyotSkoru(takimSkoruUretenFonksiyon) {
+  let EvSahibi = 0;
+  let KonukTakim = 0;
 
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+  EvSahibi = takimSkoruUretenFonksiyon();
+  KonukTakim = takimSkoruUretenFonksiyon();
 
+  return {
+    EvSahibi: EvSahibi,
+    KonukTakim: KonukTakim,
+  };
 }
 
+console.log("Görev 3, periyotSkoru", periyotSkoru(takimSkoru));
 
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
@@ -145,18 +179,67 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ]
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
+/* 
+periyot skoru örnek çıktı
+{
+  "EvSahibi": 18,
+  "KonukTakim": 12
+}
+*/
+function skorTabelasi(periyotFn, takimSkoruFn, ceyrekSayisi) {
+  const scoreBoard = [];
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+  let evSahibiToplam = 0;
+  let konukTakimToplam = 0;
+
+  for (let i = 1; i <= ceyrekSayisi; i++) {
+    const periyot = periyotFn(takimSkoruFn);
+    // evSahibiToplam = evSahibiToplam + periyot.EvSahibi;
+    evSahibiToplam += periyot.EvSahibi;
+    konukTakimToplam += periyot.KonukTakim;
+
+    scoreBoard.push(
+      i +
+        ". Periyot: Ev Sahibi " +
+        periyot.EvSahibi +
+        " - Konuk Takım " +
+        periyot.KonukTakim
+    );
+  }
+
+  let uzatmaSayisi = 0;
+
+  while (evSahibiToplam === konukTakimToplam) {
+    // uzatmaSayisi = uzatmaSayisi + 1;
+    uzatmaSayisi++;
+    const periyot = periyotFn(takimSkoruFn);
+    evSahibiToplam += periyot.EvSahibi;
+    konukTakimToplam += periyot.KonukTakim;
+    scoreBoard.push(
+      `${uzatmaSayisi}. Uzatma: Ev Sahibi ${periyot.EvSahibi} - Konuk Takım ${periyot.KonukTakim}`
+    );
+  }
+
+  // bu zamanda beraberlik mi diye bakacağız
+  scoreBoard.push(
+    "Maç Sonucu: Ev Sahibi " +
+      evSahibiToplam +
+      " - Konuk Takım " +
+      konukTakimToplam
+  );
+
+  return scoreBoard;
 }
 
-
-
+console.log(
+  "Görev 4, skorTabelasi",
+  skorTabelasi(periyotSkoru, takimSkoruMini, 2)
+);
 
 /* Aşağıdaki satırları lütfen değiştirmeyiniz*/
-function sa(){
-  console.log('Kodlar çalışıyor');
-  return 'as';
+function sa() {
+  console.log("Kodlar çalışıyor");
+  return "as";
 }
 sa();
 module.exports = {
@@ -168,4 +251,4 @@ module.exports = {
   macSonucu,
   periyotSkoru,
   skorTabelasi,
-}
+};
